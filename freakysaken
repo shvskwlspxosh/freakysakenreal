@@ -1,8 +1,8 @@
 local survivorsFolder = game.Workspace.Players:WaitForChild("Survivors")
 
 local function clearClothesAndMatchBody(survivor)
-	local shirt = survivor:FindFirstChild("Shirt")
-	local pants = survivor:FindFirstChild("Pants")
+	local shirt = survivor:FindFirstChildOfClass("Shirt")
+	local pants = survivor:FindFirstChildOfClass("Pants")
 	local tshirt = survivor:FindFirstChildOfClass("TShirt")
 
 	if shirt then
@@ -17,7 +17,6 @@ local function clearClothesAndMatchBody(survivor)
 
 	for _, accessory in ipairs(survivor:GetChildren()) do
 		if accessory:IsA("Accessory") then
-			-- Check if it's a neck accessory
 			if accessory.AccessoryType == Enum.AccessoryType.Neck then
 				accessory:Destroy()
 			end

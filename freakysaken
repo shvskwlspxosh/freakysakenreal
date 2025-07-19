@@ -12,7 +12,16 @@ local function clearClothesAndMatchBody(survivor)
 		pants.PantsTemplate = ""
 	end
 	if tshirt then
-		tshirt.Graphic = "" -- For TShirts, it's .Graphic, NOT TShirtTemplate
+		tshirt.Graphic = ""
+	end
+
+	for _, accessory in ipairs(survivor:GetChildren()) do
+		if accessory:IsA("Accessory") then
+			-- Check if it's a neck accessory
+			if accessory.AccessoryType == Enum.AccessoryType.Neck then
+				accessory:Destroy()
+			end
+		end
 	end
 
 	local head = survivor:FindFirstChild("Head")
@@ -59,7 +68,7 @@ survivorsFolder.ChildAdded:Connect(function(child)
 	if child:IsA("Model") then
 		clearClothesAndMatchBody(child)
 		child.ChildAdded:Connect(function(part)
-			if part:IsA("Clothing") or part:IsA("TShirt") then
+			if part:IsA("Clothing") or part:IsA("TShirt") or part:IsA("Accessory") then
 				clearClothesAndMatchBody(child)
 			end
 		end)

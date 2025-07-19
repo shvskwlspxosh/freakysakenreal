@@ -1,21 +1,49 @@
 local survivorsFolder = game.Workspace.Players:WaitForChild("Survivors")
 
-local function clearClothes(survivor)
+local function clearClothesAndMatchBody(survivor)
 	local shirt = survivor:FindFirstChild("Shirt")
 	local pants = survivor:FindFirstChild("Pants")
-
 	if shirt then
 		shirt.ShirtTemplate = ""
 	end
 	if pants then
 		pants.PantsTemplate = ""
 	end
+
+	local head = survivor:FindFirstChild("Head")
+	if not head then return end
+	local mainColor = head.Color
+
+	local bodyColors = survivor:FindFirstChildOfClass("BodyColors")
+	if bodyColors then
+		bodyColors.HeadColor3 = mainColor
+		bodyColors.TorsoColor3 = mainColor
+		bodyColors.LeftArmColor3 = mainColor
+		bodyColors.RightArmColor3 = mainColor
+		bodyColors.LeftLegColor3 = mainColor
+		bodyColors.RightLegColor3 = mainColor
+	end
+
+	local partsToColor = {
+		"Torso",
+		"Left Arm",
+		"Right Arm",
+		"Left Leg",
+		"Right Leg"
+	}
+
+	for _, partName in ipairs(partsToColor) do
+		local part = survivor:FindFirstChild(partName)
+		if part and part:IsA("BasePart") then
+			part.Color = mainColor
+		end
+	end
 end
 
 local function scanSurvivors()
 	for _, survivor in ipairs(survivorsFolder:GetChildren()) do
 		if survivor:IsA("Model") then
-			clearClothes(survivor)
+			clearClothesAndMatchBody(survivor)
 		end
 	end
 end
@@ -24,16 +52,16 @@ scanSurvivors()
 
 survivorsFolder.ChildAdded:Connect(function(child)
 	if child:IsA("Model") then
-		clearClothes(child)
+		clearClothesAndMatchBody(child)
 
 		child.ChildAdded:Connect(function(part)
 			if part:IsA("Clothing") then
-				clearClothes(child)
+				clearClothesAndMatchBody(child)
 			end
 		end)
 	end
 end)
-while true do
+
+while task.wait(2) do
 	scanSurvivors()
-	task.wait(2)
 end

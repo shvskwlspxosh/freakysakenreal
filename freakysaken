@@ -3,11 +3,16 @@ local survivorsFolder = game.Workspace.Players:WaitForChild("Survivors")
 local function clearClothesAndMatchBody(survivor)
 	local shirt = survivor:FindFirstChild("Shirt")
 	local pants = survivor:FindFirstChild("Pants")
+	local tshirt = survivor:FindFirstChildOfClass("TShirt")
+
 	if shirt then
 		shirt.ShirtTemplate = ""
 	end
 	if pants then
 		pants.PantsTemplate = ""
+	end
+	if tshirt then
+		tshirt.Graphic = "" -- For TShirts, it's .Graphic, NOT TShirtTemplate
 	end
 
 	local head = survivor:FindFirstChild("Head")
@@ -53,9 +58,8 @@ scanSurvivors()
 survivorsFolder.ChildAdded:Connect(function(child)
 	if child:IsA("Model") then
 		clearClothesAndMatchBody(child)
-
 		child.ChildAdded:Connect(function(part)
-			if part:IsA("Clothing") then
+			if part:IsA("Clothing") or part:IsA("TShirt") then
 				clearClothesAndMatchBody(child)
 			end
 		end)

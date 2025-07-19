@@ -1,0 +1,39 @@
+local survivorsFolder = game.Workspace.Players:WaitForChild("Survivors")
+
+local function clearClothes(survivor)
+	local shirt = survivor:FindFirstChild("Shirt")
+	local pants = survivor:FindFirstChild("Pants")
+
+	if shirt then
+		shirt.ShirtTemplate = ""
+	end
+	if pants then
+		pants.PantsTemplate = ""
+	end
+end
+
+local function scanSurvivors()
+	for _, survivor in ipairs(survivorsFolder:GetChildren()) do
+		if survivor:IsA("Model") then
+			clearClothes(survivor)
+		end
+	end
+end
+
+scanSurvivors()
+
+survivorsFolder.ChildAdded:Connect(function(child)
+	if child:IsA("Model") then
+		clearClothes(child)
+
+		child.ChildAdded:Connect(function(part)
+			if part:IsA("Clothing") then
+				clearClothes(child)
+			end
+		end)
+	end
+end)
+while true do
+	scanSurvivors()
+	task.wait(2)
+end
